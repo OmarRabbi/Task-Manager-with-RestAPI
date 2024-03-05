@@ -1,0 +1,16 @@
+{% extends 'register.html' %}
+{% block register_form_name %}
+<h3 style="text-align: center; margin-top: 10px;">Login Form</h3>
+{% endblock %}
+{% block register_form %}
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info" role="alert">
+      {{ message }}
+    </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}
+{% block register_form_account %}
+<p>Don't have an account <a href="/register/">Register</a></p>
+{% endblock %}

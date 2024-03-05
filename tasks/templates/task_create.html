@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Create New Task{% endblock %}
+
+{% block start %}
+<style>
+    .image-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .image-container input[type="file"] {
+        display: none; /* Hide the file input */
+    }
+
+    .image-container label {
+        cursor: pointer;
+    }
+
+    .preview-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .delete-icon {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        color: red;
+        cursor: pointer;
+    }
+</style>
+<div class="container mt-5">
+    <h1 class="text-center">Create New Task</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="title" class="form-label">Title:</label>
+            <input type="text" class="form-control" id="title" name="title">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description:</label>
+            <textarea class="form-control" id="description" name="description"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="due_date" class="form-label">Due Date:</label>
+            <input type="date" class="form-control" id="due_date" name="due_date">
+        </div>
+        <div class="mb-3">
+            <label for="priority" class="form-label">Priority:</label>
+            <select class="form-select" id="priority" name="priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="status" name="status" value="complete">
+            <label class="form-check-label" for="status">Complete</label>
+        </div>
+        <!-- Multiple Photos Add/Delete Options -->
+        <div class="mb-3">
+            <label for="photos" class="form-label">Images: Choose Images</label>
+            <div class="image-container">
+                <input type="file" class="form-control" id="photos" name="photos" multiple onchange="displayImages(event)">
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg w-50">Add Task</button>
+        </div>
+    </form>
+</div>
+<script>
+    function displayImages(event) {
+        const preview = document.querySelector('.image-container');
+
+        const files = event.target.files;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const imgContainer = document.createElement('div');
+                imgContainer.classList.add('position-relative');
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('preview-image');
+                img.onclick = function() {
+                    this.parentElement.remove();
+                    // Reset file input value to null
+                    document.getElementById('photos').value = null;
+                };
+
+                const deleteIcon = document.createElement('i');
+                deleteIcon.classList.add('delete-icon', 'fas', 'fa-times');
+                deleteIcon.onclick = function() {
+                    this.parentElement.remove();
+                    // Reset file input value to null
+                    document.getElementById('photos').value = null;
+                };
+
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(deleteIcon);
+                preview.appendChild(imgContainer);
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+{% endblock %}

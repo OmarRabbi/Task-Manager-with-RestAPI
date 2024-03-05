@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Task Manager | Task List{% endblock %}
+
+{% block start %}
+<style>
+    .image-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .image-container input[type="file"] {
+        display: none; /* Hide the file input */
+    }
+
+    .image-container label {
+        cursor: pointer;
+    }
+
+    .preview-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .delete-icon {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        color: red;
+        cursor: pointer;
+    }
+</style>
+<div class="container mt-5">
+    <h1>Task List</h1>
+
+    <!-- Task List Table -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Due Date</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Photos</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.description }}</td>
+                <td>{{ task.due_date }}</td>
+                <td>{{ task.priority }}</td>
+                <td>
+                    <input type="checkbox" {% if task.status == 'complete' %}checked{% endif %} disabled>
+                </td>
+                <td>
+                    <div class="image-container">
+                        {% for image in task.images.all %}
+                        <img src="{{ image.image.url }}" class="preview-image" alt="Task Image">
+                        {% endfor %}
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-primary btn-sm" onclick="viewTask({{ task.id }})">View</button>
+                    <button class="btn btn-warning btn-sm" onclick="editTask({{ task.id }})">Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteTask({{ task.id }})">Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function viewTask(taskId) {
+        // Implement view task action
+        alert('View Task with ID: ' + taskId);
+    }
+
+    function editTask(taskId) {
+        // Implement edit task action
+        alert('Edit Task with ID: ' + taskId);
+    }
+
+    function deleteTask(taskId) {
+        // Implement delete task action
+        alert('Delete Task with ID: ' + taskId);
+    }
+</script>
+{% endblock %}
